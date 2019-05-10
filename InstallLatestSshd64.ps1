@@ -1,6 +1,7 @@
 # need WMF 5.1 
-if ($PSVersionTable.PSVersion.tostring(2) -ne 5.1){
-    write-output " WMF 5.1 fehlt"
+if ($PSVersionTable.PSVersion.tostring(2) -lt 5.1){
+    write-output "Mindestens WMF 5.1 erforderlich"
+    write-output "Powershell Version "$PSVersionTable.PSVersion.tostring(4)
     exit
   }
 # get the url for latest sshd, Code from https://github.com/PowerShell/Win32-OpenSSH/wiki/How-to-retrieve-links-to-latest-packages
