@@ -19,7 +19,7 @@ cd "${Env:ProgramFiles}\OpenSSH-Win64\"
 # Open Firewall for Port 22
 New-NetFirewallRule -Name sshd -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
 # Patch sshd config to allow administrators Group public Key logon
-$Quelle="C:\ProgramData\ssh\sshd_config"
+$Quelle="${Env:ProgramData}\ssh\sshd_config"
 $Inhalt = Get-Content $Quelle
 $Inhalt|foreach {if ($_ -match "administrators") {$Inhalt[$_.readcount-1]=$_.Insert(0,"#")}}
 set-Content $Quelle $Inhalt
