@@ -1,3 +1,8 @@
+# need WMF 5.1 
+if ($PSVersionTable.PSVersion.tostring(2) -ne 5.1){
+    write-output " WMF 5.1 fehlt"
+    exit
+  }
 # get the url for latest sshd, Code from https://github.com/PowerShell/Win32-OpenSSH/wiki/How-to-retrieve-links-to-latest-packages
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 $url = 'https://github.com/PowerShell/Win32-OpenSSH/releases/latest/'
