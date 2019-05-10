@@ -21,6 +21,7 @@ New-NetFirewallRule -Name sshd -DisplayName 'OpenSSH Server (sshd)' -Enabled Tru
 # Patch sshd config to allow administrators Group public Key logon
 $Quelle="${Env:ProgramData}\ssh\sshd_config"
 $Inhalt = Get-Content $Quelle
+#search 2 lines contains administrators and insert commment sign
 $Inhalt|foreach {if ($_ -match "administrators") {$Inhalt[$_.readcount-1]=$_.Insert(0,"#")}}
 set-Content $Quelle $Inhalt
 # Start Service and configure autostart
