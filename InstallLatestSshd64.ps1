@@ -1,8 +1,8 @@
+$w32caption=(Get-WmiObject -class Win32_OperatingSystem).Caption
 # need WMF 5.1, try to install on Windows Server 2012
 if ($PSVersionTable.PSVersion.tostring(2) -lt 5.1){
     write-output "No WMF 5.1, search Windows Server 2012"
     # Get the OS Version
-    $w32caption=(Get-WmiObject -class Win32_OperatingSystem).Caption
     if ($w32caption -match "Windows Server 2012 R2") {$Spattern="W2K12R2-"}
     elseif ($w32caption -match "Windows Server 2012") {$Spattern="W2K12-"}
     else {Write-Output "Setup WMF5 manually";exit}
@@ -35,6 +35,11 @@ if ($PSVersionTable.PSVersion.tostring(2) -lt 5.1){
     write-output "Type Restart-Computer now."
     exit
   }
+# only for Server 2012 or 2016
+if (-not ($w32caption -match "2012") -and -not ($w32caption -match "2016")) {
+    write-output "is not any Version of Server 2012 or 2016 - try another method"
+    exit
+}
 write-output "get latest sshd"
 # get the url for latest sshd, Code from https://github.com/PowerShell/Win32-OpenSSH/wiki/How-to-retrieve-links-to-latest-packages
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
