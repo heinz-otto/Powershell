@@ -31,7 +31,8 @@ if ($PSVersionTable.PSVersion.tostring(2) -lt 5.1){
     else { throw 'the update file is not available at the specified location' }
     # Clean up
     Remove-Item $env:Temp\wmf5latest.msu
-    write-output "WMF 5 installed, reboot is needed! Reboot now and run Script simply again"
+    write-output "WMF 5 installed, reboot is needed! Reboot now and run Script simply again."
+    write-output "Type Restart-Computer now."
     exit
   }
 write-output "get latest sshd"
