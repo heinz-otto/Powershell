@@ -1,8 +1,25 @@
-# need WMF 5.1 
+# need WMF 5.1, try to install on Windows Server 2012
 if ($PSVersionTable.PSVersion.tostring(2) -lt 5.1){
-    write-output "Mindestens WMF 5.1 erforderlich"
-    write-output "Powershell Version "$PSVersionTable.PSVersion.tostring(4)
-    exit
+    # Get the OS Version
+    $w32caption=(Get-WmiObject -class Win32_OperatingSystem).Caption
+    if ($w32caption -match "Windows Server 2012 R2") {$Spattern="W2K12R2-"}
+    elseif ($w32caption -match "Windows Server 2012") {$Spattern="W2K12-"}
+    else {Write-Output "Setup WMF5 manually";exit}
+
+    # The following Code is original from https://gist.github.com/mgreenegit/b80ddd089677f92f56f5
+    # Use shortcode to find latest TechNet download site
+    $confirmationPage = 'http://www.microsoft.com/en-us/download/' +  $((invoke-webrequest 'http://aka.ms/wmf5latest' -UseBasicParsing).links | ? Class -eq 'mscom-link download-button dl' | % href)
+    # Parse confirmation page and look for URL to file
+    $directURL = (invoke-webrequest $confirmationPage -UseBasicParsing).Links | ? Class -eq 'mscom-link' | ? href -match $Spattern | % href | select -first 1
+    # Download file to local
+    $download = invoke-webrequest $directURL -OutFile $env:Temp\wmf5latest.msu
+    # Install quietly with no reboot
+    if (test-path $env:Temp\wmf5latest.msu) {
+      start -wait $env:Temp\wmf5latest.msu -argumentlist '/quiet /norestart'
+      }
+    else { throw 'the update file is not available at the specified location' }
+    # Clean up
+    Remove-Item $env:Temp\wmf5latest.msu
   }
 # get the url for latest sshd, Code from https://github.com/PowerShell/Win32-OpenSSH/wiki/How-to-retrieve-links-to-latest-packages
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
