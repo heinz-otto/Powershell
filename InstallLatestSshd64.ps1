@@ -48,14 +48,16 @@ cd "${Env:ProgramFiles}\OpenSSH-Win64\"
 .\install-sshd.ps1
 # Open Firewall for Port 22
 New-NetFirewallRule -Name sshd -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
-# Patch sshd config to allow administrators Group public Key logon
-$Quelle="${Env:ProgramData}\ssh\sshd_config"
-write-output "patch the sshd config on $Quelle"
-$Inhalt = Get-Content $Quelle
-#search 2 lines contains administrators and insert commment sign
-$Inhalt|foreach {if ($_ -match "administrators") {$Inhalt[$_.readcount-1]=$_.Insert(0,"#")}}
-set-Content $Quelle $Inhalt
 # Start Service and configure autostart
 Start-Service -Name sshd
 Set-Service -Name sshd -StartupType automatic
 write-output "sshd startet and set to automatic"
+# Patch sshd config to allow administrators Group public Key logon
+$Quelle="${Env:ProgramData}\ssh\sshd_config"
+write-output "patch the sshd config on $Quelle"
+Stop-Service -Name sshd
+$Inhalt = Get-Content $Quelle
+#search 2 lines contains administrators and insert commment sign
+$Inhalt|foreach {if ($_ -match "administrators") {$Inhalt[$_.readcount-1]=$_.Insert(0,"#")}}
+set-Content $Quelle $Inhalt
+Start-Service -Name sshd
