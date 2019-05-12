@@ -23,7 +23,7 @@ if ($PSVersionTable.PSVersion.tostring(2) -lt 5.1){
     elseif ($Spattern -eq "W2K12-"){$directURL="https://download.microsoft.com/download/6/F/5/6F5FF66C-6775-42B0-86C4-47D41F2DA187/W2K12-KB3191565-x64.msu"}
     $download = invoke-webrequest $directURL -OutFile $env:Temp\wmf5latest.msu
     # Install quietly with no reboot
-    write-output "$env:Temp\wmf5latest.msu downloaded"
+    write-output "$env:Temp\wmf5latest.msu will being installed, needs some time"
     if (test-path $env:Temp\wmf5latest.msu) {
       start -wait $env:Temp\wmf5latest.msu -argumentlist '/quiet /norestart'
       write-output "$env:Temp\wmf5latest.msu installed"
@@ -32,6 +32,7 @@ if ($PSVersionTable.PSVersion.tostring(2) -lt 5.1){
     # Clean up
     Remove-Item $env:Temp\wmf5latest.msu
     write-output "WMF 5 installed, reboot is needed! Reboot now and run Script simply again"
+    exit
   }
 write-output "get latest sshd"
 # get the url for latest sshd, Code from https://github.com/PowerShell/Win32-OpenSSH/wiki/How-to-retrieve-links-to-latest-packages
