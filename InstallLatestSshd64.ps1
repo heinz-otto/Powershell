@@ -41,10 +41,12 @@ $response=$request.GetResponse()
 $url = $([String]$response.GetResponseHeader("Location")).Replace('tag','download') + '/OpenSSH-Win64.zip'
 write-output "sshd url is $url"
 # Download, expand and install
+pushd
 Invoke-WebRequest $url -OutFile openssh.zip
 Expand-Archive .\openssh.zip ${Env:ProgramFiles}
 cd "${Env:ProgramFiles}\OpenSSH-Win64\"
 .\install-sshd.ps1
+popd
 # Open Firewall for Port 22
 New-NetFirewallRule -Name sshd -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
 # Start Service and configure autostart
