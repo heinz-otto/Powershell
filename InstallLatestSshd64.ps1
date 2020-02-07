@@ -1,3 +1,18 @@
+<#
+.SYNOPSIS
+    This Script will be setting up OpenSsh Server on Windows 2012 and 2016
+.DESCRIPTION
+    The process is 4 steps straight away, no dialog.
+    1. The Version of WMF is checked (5.1) and updated if nessesary.
+    2. The SSH Server will be downloaded and installed.
+    3. The Firewall will be configured properly, open port 22.
+    4. The public Key Logon for Admisnitrators on Windows 2012 will be patched.
+    see also: https://heinz-otto.blogspot.com/2019/05/windows-von-fhem-aus-steuern.html
+.EXAMPLE
+    simply start the Script within powershell, no parameters. 
+.NOTES
+    May be, some links will be broken in the Future. (May 2019)
+#>
 $w32caption=(Get-WmiObject -class Win32_OperatingSystem).Caption
 # need WMF 5.1, try to install on Windows Server 2012
 if ($PSVersionTable.PSVersion.tostring(2) -lt 5.1){
