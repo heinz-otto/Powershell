@@ -17,14 +17,16 @@ param(
 )
 #endregion 
 
-# check if the Module UserRights is already loaded
+# check if the Module UserRights is already loaded or exists as file in the Script Dir
 $cmdlet = "Grant-UserRight"
-if (!( get-command -Name $cmdlet -ErrorAction SilentlyContinue)) {
+$Ofile = "UserRights.psm1"
+if (!( Get-Command -Name $cmdlet -ErrorAction SilentlyContinue)) {
    "Cmdlet $cmdlet not found - try to install."
-   $url = "https://gallery.technet.microsoft.com/scriptcenter/Grant-Revoke-Query-user-26e259b0/file/198800/1/UserRights.psm1"
-   $output = "UserRights.psm1"
-   Invoke-WebRequest -Uri $url -OutFile $output
-   Import-Module .\UserRights.psm1
+   if (!(Test-Path $Ofile -PathType Leaf)) {
+      $url = "https://gallery.technet.microsoft.com/scriptcenter/Grant-Revoke-Query-user-26e259b0/file/198800/1/UserRights.psm1"
+      Invoke-WebRequest -Uri $url -OutFile $Ofile
+   }
+   Import-Module ".\$Ofile"
 }
 
 New-LocalUser $User 
