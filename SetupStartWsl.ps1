@@ -19,7 +19,9 @@ perl fhem.pl fhem.cfg
 ### 2. create in a similar way the Powershellscript wich will used from the taskscheduler
 ###
 $file='c:\scripts\startwsl.ps1'
-@"
+$FWRname='WSL 2 Firewall Unlock'
+
+@'
 wsl -u fhem -d debian -e bash /mnt/c/scripts/start.sh
 $cAddr=(wsl hostname -I).Trim()    # entferne Leerzeichen am Ende
 $ports=8083,1883                   # Array mit allen Ports
@@ -27,14 +29,18 @@ if (netsh interface portproxy show all){netsh interface portproxy reset}
 Foreach ($port in $ports){
    netsh interface portproxy add v4tov4 listenport=$port connectport=$port connectaddress=$cAddr
 }
-Set-NetFirewallRule -DisplayName 'WSL 2 Firewall Unlock' -LocalPort $ports
+Set-NetFirewallRule -LocalPort $ports 
+'@ + @"
+-DisplayName "$FWRname"
 "@ | Out-File -Encoding ASCII $file
 ###
 ### 3. Create Basic Firewall Rules for the portforwarding to wsl
 ###
 $ports=8083,1883
-New-NetFireWallRule -DisplayName 'WSL 2 Firewall Unlock' -Direction Outbound -LocalPort $ports -Action Allow -Protocol TCP
-New-NetFireWallRule -DisplayName 'WSL 2 Firewall Unlock' -Direction Inbound -LocalPort $ports -Action Allow -Protocol TCP
+if (-not(Get-NetFirewallRule -DisplayName "$FWRname")){
+    New-NetFireWallRule -DisplayName "$FWRname" -Direction Outbound -LocalPort $ports -Action Allow -Protocol TCP
+    New-NetFireWallRule -DisplayName "$FWRname" -Direction Inbound -LocalPort $ports -Action Allow -Protocol TCP
+} else {Set-NetFirewallRule -LocalPort $ports -DisplayName "$FWRname"}
 ###
 ### Last: register a Task wich will execute the second PS Script every time starting up the Windows Host System
 $userID='otto'
@@ -44,4 +50,4 @@ $T = New-ScheduledTaskTrigger -AtStartup
 $P = New-ScheduledTaskPrincipal -UserID $userID -LogonType S4U -Id Author -RunLevel Highest
 $S = New-ScheduledTaskSettingsSet
 $D = New-ScheduledTask -Action $A -Principal $P -Trigger $T -Settings $S
-Register-ScheduledTask $taskname -InputObject $D
+if (-not(Get-ScheduledTask $taskname)) {Register-ScheduledTask $taskname -InputObject $D} else {Set-ScheduledTask $taskname -InputObject $D}
