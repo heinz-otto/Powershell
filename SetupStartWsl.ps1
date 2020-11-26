@@ -3,7 +3,7 @@
 	This Script will setup start WSL during host startup
 .DESCRIPTION	
     This Script will make a special setup for starting WSL and a linux job every time when Windows is starting
-.EXAPMLE
+.EXAMPLE
     execute the script only: SetupStartWsl.ps1
 .LINK
     https://heinz-otto.blogspot.com/2020/11/wsl-windows-linux-wie-macht-man-das.html
