@@ -11,7 +11,7 @@
 ### Some configuration variables
 $fileS='c:\scripts\start.sh'      # shell scriptname
 $fileP='c:\scripts\startwsl.ps1'  # powershell scriptname
-$FWRname='WSL 2 Firewall Unlock'  # Firewall Name
+$FWRname='WSL Firewall Unlock'    # Firewall Name
 $userID='otto'                    # UserID for Task 
 $taskname='StartWslPP'            # Name for Task
 $ports=8083,1883                  # ports for first Rule
