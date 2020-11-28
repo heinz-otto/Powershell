@@ -3,7 +3,7 @@
 	The script shows a Message in BalloonTipp Area
 .DESCRIPTION	
     Hiermit können ohne Unterbrechung des Scripts Nachrichten im rechten Nachrichten Areal von Windows ausgegeben werden.
-.EXAPMLE
+.EXAMPLE
     Show–BalloonTip –Text 'Script has retrieved data' –Title 'All is fine'
 .EXAMPLE 
     Show–BalloonTip –Text 'NAS bitte per Hand starten, eventuell war Stromausfall' –Title 'Achtung' –Icon Warning –Timeout 15000
