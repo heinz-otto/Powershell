@@ -18,17 +18,17 @@ $ports=8083,1883                  # ports for first Rule
 
 ### 1. create the script for linux job with 'here string' and strip the Windowsstyle newline 
 ###
-@"
+@'
 #!/bin/bash
 cd /opt/fhem
-cmd='perl fhem.pl fhem.cfg'
+cmd="perl fhem.pl fhem.cfg"
 if ! pidof $cmd; then
   $cmd
   echo $cmd is starting
 else
   echo $cmd always running
 fi
-"@ | Out-File -Encoding ASCII $fileS
+'@ | Out-File -Encoding ASCII $fileS
 ((Get-Content $fileS) -join "`n") + "`n" | Set-Content -NoNewline $fileS
 ### 2. create in a similar way the Powershellscript wich will used from the taskscheduler
 ###
