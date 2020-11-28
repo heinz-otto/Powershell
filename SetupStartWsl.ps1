@@ -62,4 +62,6 @@ $T = New-ScheduledTaskTrigger -AtStartup
 $P = New-ScheduledTaskPrincipal -UserID $userID -LogonType S4U -Id Author -RunLevel Highest
 $S = New-ScheduledTaskSettingsSet
 $D = New-ScheduledTask -Action $A -Principal $P -Trigger $T -Settings $S
-if (-not(Get-ScheduledTask "$taskname*")) {Register-ScheduledTask "$taskname" -InputObject $D} else {Set-ScheduledTask "$taskname" -InputObject $D}
+if (-not(Get-ScheduledTask "$taskname*")) {Register-ScheduledTask "$taskname" -InputObject $D} else {
+   Set-ScheduledTask "$taskname" -Action $A -Principal $P -Trigger $T -Settings $S
+   }
