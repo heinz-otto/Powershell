@@ -51,7 +51,7 @@ Set-NetFirewallRule -LocalPort $ports
 ###
 ### 3. Create Basic Firewall Rules for the portforwarding to wsl
 ###
-if (-not(Get-NetFirewallRule -DisplayName "$FWRname")){
+if (-not(Get-NetFirewallRule -DisplayName "$FWRname*")){
     New-NetFireWallRule -DisplayName "$FWRname" -Direction Outbound -LocalPort $ports -Action Allow -Protocol TCP
     New-NetFireWallRule -DisplayName "$FWRname" -Direction Inbound -LocalPort $ports -Action Allow -Protocol TCP
 } else {Set-NetFirewallRule -LocalPort $ports -DisplayName "$FWRname"}
