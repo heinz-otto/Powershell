@@ -19,6 +19,7 @@ $ports=8083,1883                  # ports for first Rule
 ### 1. create the script for linux job with 'here string' and strip the Windowsstyle newline 
 ###
 @"
+#!/bin/bash
 cd /opt/fhem
 cmd='perl fhem.pl fhem.cfg'
 if ! pidof $cmd; then
