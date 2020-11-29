@@ -14,7 +14,8 @@ $fileP='c:\scripts\startwsl.ps1'  # powershell scriptname
 $FWRname='WSL Firewall Unlock'    # Firewall Name
 $taskname='StartWslPP'            # Name for Task
 $ports=8083,1883                  # ports for first Rule
-$userID=(Get-LocalUser |where enabled).name           # UserID for Task 
+#$userID=(Get-LocalUser |where enabled).name           # UserID for Task 
+$userID=whoami                    # UserID for Task 
 
 ### 1. create the script for linux job with 'here string' and strip the Windowsstyle newline 
 ###
