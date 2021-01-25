@@ -1,12 +1,12 @@
 <#
 .SYNOPSIS
-    This Script will be setting up OpenSsh Server on Windows 2012 and 2016
+    This Script will be install or upgrade OpenSSH Server on Windows 2012 and 2016
 .DESCRIPTION
     The process is 4 steps straight away, no dialog.
     1. The Version of WMF is checked (5.1) and updated if nessesary.
     2. The SSH Server will be downloaded and installed.
     3. The Firewall will be configured properly, open port 22.
-    4. The public Key Logon for Admisnitrators on Windows 2012 will be patched.
+    4. The public Key Logon for Administrators on Windows 2012 will be patched.
     see also: https://heinz-otto.blogspot.com/2019/05/windows-von-fhem-aus-steuern.html
 .EXAMPLE
     simply start the Script within powershell, no parameters. 
@@ -56,14 +56,17 @@ $response=$request.GetResponse()
 $url = $([String]$response.GetResponseHeader("Location")).Replace('tag','download') + '/OpenSSH-Win64.zip'
 write-output "sshd url is $url"
 # Download, expand and install
-pushd
 Invoke-WebRequest $url -OutFile openssh.zip
-Expand-Archive .\openssh.zip ${Env:ProgramFiles}
-cd "${Env:ProgramFiles}\OpenSSH-Win64\"
+if (Get-Service sshd -ErrorAction SilentlyContinue) {Stop-Service sshd}
+if (Get-Service ssh-agent -ErrorAction SilentlyContinue) {Stop-Service ssh-agent}
+Expand-Archive .\openssh.zip ${Env:ProgramFiles} -Force
+pushd "${Env:ProgramFiles}\OpenSSH-Win64\"
 .\install-sshd.ps1
 popd
 # Open Firewall for Port 22
-New-NetFirewallRule -Name sshd -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
+if (-not (Get-NetFirewallRule -Name sshd -ErrorAction SilentlyContinue)) {
+   New-NetFirewallRule -Name sshd -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
+}
 # Start Service and configure autostart
 Start-Service -Name sshd
 Set-Service -Name sshd -StartupType automatic
