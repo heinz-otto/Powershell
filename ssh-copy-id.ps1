@@ -1,8 +1,9 @@
-﻿<#
+<#
 .SYNOPSIS
     ssh-copy-id for Powershell
 .DESCRIPTION
-    copy the piblic key to the host
+    copying the public key from Windows to linux or Windows hosts.
+    Could be support different destion path like OpenWrt.
 .EXAMPLE
     ssh-copy-id user@host
     ssh-copy-id user@host -path /etc/dropbear   #e.g. for OpenWrt
@@ -22,9 +23,7 @@
     $os = '',$i = "$env:userprofile\.ssh\id_rsa.pub",$path='.ssh'
   )
 #endregion 
-write-verbose "Destination: $ziel"
-write-verbose "PublicKeyLocation: $i"
-write-verbose "DestinationOS: $os"
+write-verbose "Destination: $ziel`r`nPublicKeyLocation: $i`r`nDestinationOS: $os`r`nDestinationPath: $path"
 
 $pkey = $(type $i) 
 
