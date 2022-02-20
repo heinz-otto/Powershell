@@ -10,6 +10,6 @@ route add $zielnetz mask 255.255.255.0 $router
 # Anwendung starten, 
 Start-Process $prog -wait
 # viele Anwendungen beenden den Aufrufprozess - dann diese Zeile aktivieren
-Read-Host -Prompt "Route ins Netzwerk $zielnetz noch aktiv - eine Taste zum löschen" #pause
+Read-Host -Prompt "Route ins Netzwerk $zielnetz noch aktiv - eine Taste zum loeschen" #pause
 # Route löschen 
 route delete $zielnetz mask 255.255.255.0 $router
