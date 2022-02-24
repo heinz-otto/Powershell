@@ -4,9 +4,10 @@
 .DESCRIPTION
     show the usage of params, Call (&) Operator and combination of double and single quoted here string
 .EXAMPLE
-    scriptname.ps1 -ziel 'user@host' -mac 'aa:bb:cc:11:22:33'
+    scriptname.ps1 -dest 'user@host' -mac 'aa:bb:cc:11:22:33'
 .NOTES
     This Script is more a study: How to execute some code over ssh remotely
+    There have to be a public key authorisation already in place!
 #>
 param(
   [Parameter(Mandatory=$true,HelpMessage="give dest: username@hostname")] $dest,
