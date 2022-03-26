@@ -6,9 +6,9 @@ if ((Get-NetConnectionProfile).Name|? {$_ -match 'peer'}){
     # falls nicht verfügbar fhemcl Script nachladen
     if (-not(Test-Path .\fhemcl.ps1)) {wget -OutFile .\fhemcl.ps1 https://raw.githubusercontent.com/heinz-otto/fhemcl/master/fhemcl.ps1}
     # diese 3 Variablen müssen angepasst werden
-    $fhemurl="http://192.168.x.x:8083" 
-    $server='ServerNameWOLDevice'
-    $station='StationsNameWOLDevice'
+    $fhemurl = "http://192.168.x.x:8083" #Setup
+    $server = "ServerNameWOLDevice" #Setup
+    $station = "StationsNameWOLDevice" #Setup
     $check=(("list ${server} isRunning"|.\fhemcl.ps1 $fhemurl).split()| where {$_})[3]
     if ($check -eq 'false'){
        Write-Output "Server $server wird gestartet, bitte warten"
