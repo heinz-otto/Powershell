@@ -1,14 +1,14 @@
 # Das Script benutzt FHEM um WOL Devices zu prüfen, zu starten und wenn alles verfügbar ist: wird eine RDP Verbindung gestartet
 # Die WOl Devices haben je zwei userReadings smbRunning und rdpRunning die gesetzt werden, wenn die jeweiligen Ports verfügbar sind
+# diese 3 Variablen müssen angepasst werden
+$fhemurl = "http://192.168.x.x:8083" #Setup
+$server = "ServerNameWOLDevice" #Setup
+$station = "StationsNameWOLDevice" #Setup
 # Das Script prüft eine bestimmtes Netzwerkverbindungsprofil
 if ((Get-NetConnectionProfile).Name|? {$_ -match 'peer'}){
     "Wireguard ist verbunden"
     # falls nicht verfügbar fhemcl Script nachladen
     if (-not(Test-Path .\fhemcl.ps1)) {wget -OutFile .\fhemcl.ps1 https://raw.githubusercontent.com/heinz-otto/fhemcl/master/fhemcl.ps1}
-    # diese 3 Variablen müssen angepasst werden
-    $fhemurl = "http://192.168.x.x:8083" #Setup
-    $server = "ServerNameWOLDevice" #Setup
-    $station = "StationsNameWOLDevice" #Setup
     $check=(("list ${server} isRunning"|.\fhemcl.ps1 $fhemurl).split()| where {$_})[3]
     if ($check -eq 'false'){
        Write-Output "Server $server wird gestartet, bitte warten"
