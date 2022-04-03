@@ -4,13 +4,13 @@ $saveFILE = "StartePraxis"
 [System.Reflection.Assembly]::LoadWithPartialName("System.windows.forms") | Out-Null
 
 function Get-NewLineContent {
-        param (
-        $ScriptContent,$LineToUpdate
-    )
-
+   param (
+          $ScriptContent,$LineToUpdate
+         )
     $oldline = $ScriptContent |  Select-String -Pattern $LineToUpdate | Select -First 1
     $OldString = ("$oldline"| Select-String -Pattern '".*"').Matches.Value -Replace ("`"","")
-    $newvalue = Read-Host "$oldline - neuen Wert bitte $OldString "
+    $newvalue = Read-Host "$oldline - neuen Wert bitte - $OldString "
+    # Eventuell hier noch leere Eingabe abfangen
     $newline = "$oldline".Replace("$OldString","$newvalue").Split('#')[0]
     $ScriptContent.Replace("$oldline","$newline") 
 }
