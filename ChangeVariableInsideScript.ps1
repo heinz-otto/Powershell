@@ -10,12 +10,12 @@ function Get-NewLineContent {
 
     $oldline = $ScriptContent |  Select-String -Pattern $LineToUpdate | Select -First 1
     $OldString = ("$oldline"| Select-String -Pattern '".*"').Matches.Value -Replace ("`"","")
-    $newvalue = Read-Host "$oldline - geben sie den neuen Wert ein für $OldString "
+    $newvalue = Read-Host "$oldline - neuen Wert bitte $OldString "
     $newline = "$oldline".Replace("$OldString","$newvalue").Split('#')[0]
     $ScriptContent.Replace("$oldline","$newline") 
 }
 
-#############
+############# Script laden und zwischenspeichern, sonst stimmt irgendwie die Codierung / Formatierung nicht
 $Script='temp.txt'
 $ScriptWeb="https://raw.githubusercontent.com/heinz-otto/Powershell/master/workflow2rdp.ps1"
 $webobjekt=Invoke-WebRequest -Uri $ScriptWeb -OutFile $Script
@@ -63,6 +63,7 @@ if ($array.Length -gt 0) {
     if (!(Test-Path $savePATH)) {New-Item -Path $savePATH -ItemType Directory}
     $saveDlg = New-Object -Typename System.Windows.Forms.SaveFileDialog
     $saveDlg.InitialDirectory = $savePATH
+    $saveDlg.Filter = "powershell files (*.ps1)|*.ps1"
     $saveDlg.DefaultExt = 'ps1'
     $saveDlg.FileName = $saveFILE
     $saveDlg.ShowDialog()
