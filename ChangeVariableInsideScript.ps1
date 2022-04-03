@@ -1,5 +1,7 @@
 $savePATH = "c:\tools\scripts"
 $saveFILE = "StartePraxis"
+# https://usefulscripting.network/powershell/file-dialog-with-powershell/
+[System.Reflection.Assembly]::LoadWithPartialName("System.windows.forms") | Out-Null
 
 function Get-NewLineContent {
         param (
@@ -12,11 +14,14 @@ function Get-NewLineContent {
     $newline = "$oldline".Replace("$OldString","$newvalue").Split('#')[0]
     $ScriptContent.Replace("$oldline","$newline") 
 }
-      $Script='temp.txt'
-      $ScriptWeb="https://raw.githubusercontent.com/heinz-otto/Powershell/master/workflow2rdp.ps1"
-      $webobjekt=Invoke-WebRequest -Uri $ScriptWeb -OutFile $Script
-      $ScriptModified=Get-Content $Script
-      Remove-Item $Script
+
+#############
+$Script='temp.txt'
+$ScriptWeb="https://raw.githubusercontent.com/heinz-otto/Powershell/master/workflow2rdp.ps1"
+$webobjekt=Invoke-WebRequest -Uri $ScriptWeb -OutFile $Script
+$ScriptModified=Get-Content $Script
+Remove-Item $Script
+############
 
 # Add-Type -AssemblyName System.Windows.Forms
 # # Script einfach laden $Script='C:\tools\scripts\StarteRDPSession.ps1'
