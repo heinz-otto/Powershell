@@ -1,5 +1,3 @@
-########
-
 $savePATH = "c:\tools\scripts"
 $saveFILE = "StartePraxis"
 
