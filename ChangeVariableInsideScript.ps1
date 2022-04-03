@@ -12,33 +12,38 @@ function Get-NewLineContent {
     $newline = "$oldline".Replace("$OldString","$newvalue").Split('#')[0]
     $ScriptContent.Replace("$oldline","$newline") 
 }
-
-Add-Type -AssemblyName System.Windows.Forms
-# Script einfach laden $Script='C:\tools\scripts\StarteRDPSession.ps1'
-# Auswahldialog
-$caption = "Choose Action";
-$message = "Wie soll das Skript geladen werden?";
-$aktion0 = new-Object System.Management.Automation.Host.ChoiceDescription "&loadScriptDialog","loadScriptDialog";
-$aktion1 = new-Object System.Management.Automation.Host.ChoiceDescription "&loadScriptFromWeb","loadScriptFromWeb";
-$choices = [System.Management.Automation.Host.ChoiceDescription[]]($aktion0,$aktion1);
-$answer = $host.ui.PromptForChoice($caption,$message,$choices,0)
-switch ($answer){
-    0 {
-    #loadScriptDialog
-      $openDlg = New-Object -Typename System.Windows.Forms.OpenFileDialog
-      $openDlg.ShowDialog()
-      $Script=$openDlg.FileName
-      $ScriptModified=Get-Content $Script
-    }
-    1 {
-    #loadScriptFromWeb
       $Script='temp.txt'
       $ScriptWeb="https://raw.githubusercontent.com/heinz-otto/Powershell/master/workflow2rdp.ps1"
       $webobjekt=Invoke-WebRequest -Uri $ScriptWeb -OutFile $Script
       $ScriptModified=Get-Content $Script
       Remove-Item $Script
-    }
-}
+
+# Add-Type -AssemblyName System.Windows.Forms
+# # Script einfach laden $Script='C:\tools\scripts\StarteRDPSession.ps1'
+# # Auswahldialog
+# $caption = "Choose Action";
+# $message = "Wie soll das Skript geladen werden?";
+# $aktion0 = new-Object System.Management.Automation.Host.ChoiceDescription "&loadScriptDialog","loadScriptDialog";
+# $aktion1 = new-Object System.Management.Automation.Host.ChoiceDescription "&loadScriptFromWeb","loadScriptFromWeb";
+# $choices = [System.Management.Automation.Host.ChoiceDescription[]]($aktion0,$aktion1);
+# $answer = $host.ui.PromptForChoice($caption,$message,$choices,0)
+# switch ($answer){
+    # 0 {
+    # # loadScriptDialog
+      # $openDlg = New-Object -Typename System.Windows.Forms.OpenFileDialog
+      # $openDlg.ShowDialog()
+      # $Script=$openDlg.FileName
+      # $ScriptModified=Get-Content $Script
+    # }
+    # 1 {
+    # # loadScriptFromWeb
+      # $Script='temp.txt'
+      # $ScriptWeb="https://raw.githubusercontent.com/heinz-otto/Powershell/master/workflow2rdp.ps1"
+      # $webobjekt=Invoke-WebRequest -Uri $ScriptWeb -OutFile $Script
+      # $ScriptModified=Get-Content $Script
+      # Remove-Item $Script
+    # }
+# }
 
 # Alle Zeilen zum Ändern in ein Array
 $array = $ScriptModified | Select-String -Pattern ".*#Setup"
