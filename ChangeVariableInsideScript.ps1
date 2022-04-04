@@ -20,9 +20,9 @@ Add-Type -AssemblyName Microsoft.VisualBasic
 $savePATH = "c:\tools\scripts"
 $saveFILE = "StartePraxis"
 $ScriptWeb = "https://raw.githubusercontent.com/heinz-otto/Powershell/master/workflow2rdp.ps1"
-$savePATH = [Microsoft.VisualBasic.Interaction]::InputBox("Pfad Script", "Eingabe", $savePATH)
-$saveFILE = [Microsoft.VisualBasic.Interaction]::InputBox("Dateiname Script", "Eingabe", $saveFILE)
-$ScriptWeb = [Microsoft.VisualBasic.Interaction]::InputBox("WEB URL Script", "Eingabe", $ScriptWeb)
+$savePATH = [Microsoft.VisualBasic.Interaction]::InputBox("Pfad Script", "Skriptkonfiguration", $savePATH)
+$saveFILE = [Microsoft.VisualBasic.Interaction]::InputBox("Dateiname Script", "Skriptkonfiguration", $saveFILE)
+$ScriptWeb = [Microsoft.VisualBasic.Interaction]::InputBox("WEB URL Script", "Skriptkonfiguration", $ScriptWeb)
 
 # Functions
 function Get-NewLineContent {
@@ -30,7 +30,7 @@ function Get-NewLineContent {
 
     $oldline = $ScriptContent | Select-String -Pattern $LineToUpdate | Select -First 1
     $OldString = ("$oldline"| Select-String -Pattern '".*"').Matches.Value -Replace ("`"","")
-    $newvalue = [Microsoft.VisualBasic.Interaction]::InputBox("Neuer Wert?", "Eingabe", $OldString)
+    $newvalue = [Microsoft.VisualBasic.Interaction]::InputBox("Neuer Wert?", "Konfiguriere Skript $saveFILE", $OldString)
     #$newvalue = Read-Host "$oldline - geben sie den neuen Wert ein für $OldString "
     $newline = "$oldline".Replace("$OldString","$newvalue").Split('#')[0]
     $ScriptContent.Replace("$oldline","$newline") 
