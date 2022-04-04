@@ -11,6 +11,7 @@
 .LINK
     https://github.com/heinz-otto/Powershell/
     https://www.mariotti.de/powershell-dialog/
+    https://www.netspi.com/blog/technical/network-penetration-testing/15-ways-to-bypass-the-powershell-execution-policy/
 #>
 
 Add-Type -AssemblyName System.Windows.Forms
