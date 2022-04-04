@@ -1,3 +1,5 @@
+# Starte dieses Script z.B. mit dieser Kommandozeile - windows+r
+# powershell -nop -c (Invoke-WebRequest -Uri https://raw.githubusercontent.com/heinz-otto/Powershell/master/ChangeVariableInsideScript.ps1).content|powershell -
 # Parameter
 $savePATH = "c:\tools\scripts"
 $saveFILE = "StartePraxis"
