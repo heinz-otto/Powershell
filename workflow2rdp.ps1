@@ -1,15 +1,29 @@
-# Das Script benutzt FHEM um WOL Devices zu pruefen, zu starten und wenn alles verfuegbar ist: wird eine RDP Verbindung gestartet
-# Die WOl Devices haben je zwei userReadings smbRunning und rdpRunning die gesetzt werden, wenn die jeweiligen Ports verfuegbar sind
+ <#
+.SYNOPSIS
+	The script will start server and workstation on behalf of FHEM
+.DESCRIPTION	
+    Workflow: Start Server / warten / Start Station / warten / verbinde mit RDP
+    Das Script benutzt FHEM um WOL Devices zu pruefen, zu starten und wenn alles verfuegbar ist: wird eine RDP Verbindung gestartet.
+    Die WOl Devices haben je zwei userReadings smbRunning und rdpRunning die gesetzt werden, wenn die jeweiligen Ports verfuegbar sind.
+.EXAMPLE
+    configure, save the script and simpel run it
+.LINK
+    https://github.com/heinz-otto/Powershell/edit/master/workflow2rdp.ps1
+#>
+
 # diese 3 Variablen muessen angepasst werden
 $fhemurl = "http://192.168.x.x:8083" #Setup
 $server = "ServerNameWOLDevice" #Setup
 $station = "StationsNameWOLDevice" #Setup
 
+$ConnectionProfilePattern = 'peer'
+
+# For message box
 Add-Type -AssemblyName System.Windows.Forms
 
-# Das Script prueft eine bestimmtes Netzwerkverbindungsprofil
-if ((Get-NetConnectionProfile).InterfaceAlias|? {$_ -match 'peer'}){
-    "Wireguard ist verbunden"
+# Das Script prueft auf ein bestehendes Netzwerkverbindungsprofil
+if ((Get-NetConnectionProfile).InterfaceAlias|? {$_ -match $ConnectionProfilePattern}){
+    Write-Output "Netzwerk ist verbunden"
     # falls nicht verfuegbar fhemcl Script nachladen
     if (-not(Test-Path .\fhemcl.ps1)) {wget -OutFile .\fhemcl.ps1 https://raw.githubusercontent.com/heinz-otto/fhemcl/master/fhemcl.ps1}
     $check=(("list ${server} isRunning"|.\fhemcl.ps1 $fhemurl).split()| where {$_})[3]
