@@ -1,22 +1,36 @@
-# Starte dieses Script z.B. mit dieser Kommandozeile - windows+r
-# powershell -nop -c (Invoke-WebRequest -Uri https://raw.githubusercontent.com/heinz-otto/Powershell/master/ChangeVariableInsideScript.ps1).content|powershell -
+<#
+.SYNOPSIS
+	The script is a kind of setup for a script downloaded from Web
+.DESCRIPTION	
+    Im heruntergeladenem Script werden Zeilen mit #Setup gesucht und die Werte der Variablen werden neu gesetzt. 
+    Das Script wird lokal gespeichert und ein Link auf dem Desktop erzeugt.
+.EXAMPLE
+    Starte dieses Script z.B. mit dieser Kommandozeile - windows+r
+.EXAMPLE 
+    powershell -nop -c (Invoke-WebRequest -Uri https://raw.githubusercontent.com/heinz-otto/Powershell/master/ChangeVariableInsideScript.ps1).content|powershell -
+.LINK
+    https://github.com/heinz-otto/Powershell/
+    https://www.mariotti.de/powershell-dialog/
+#>
+
+Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName Microsoft.VisualBasic
+
 # Parameter
 $savePATH = "c:\tools\scripts"
 $saveFILE = "StartePraxis"
 $ScriptWeb = "https://raw.githubusercontent.com/heinz-otto/Powershell/master/workflow2rdp.ps1"
+$savePATH = [Microsoft.VisualBasic.Interaction]::InputBox("Pfad Script", "Eingabe", $savePATH)
+$saveFILE = [Microsoft.VisualBasic.Interaction]::InputBox("Dateiname Script", "Eingabe", $saveFILE)
+$ScriptWeb = [Microsoft.VisualBasic.Interaction]::InputBox("WEB URL Script", "Eingabe", $ScriptWeb)
 
-# https://usefulscripting.network/powershell/file-dialog-with-powershell/
-#[System.Reflection.Assembly]::LoadWithPartialName("System.windows.forms") | Out-Null
-Add-Type -AssemblyName System.Windows.Forms
-#https://www.mariotti.de/powershell-dialog/
-Add-Type -AssemblyName Microsoft.VisualBasic
-
+# Functions
 function Get-NewLineContent {
     param ( $ScriptContent,$LineToUpdate )
 
     $oldline = $ScriptContent | Select-String -Pattern $LineToUpdate | Select -First 1
     $OldString = ("$oldline"| Select-String -Pattern '".*"').Matches.Value -Replace ("`"","")
-    $newvalue = [Microsoft.VisualBasic.Interaction]::InputBox("geben sie den neuen Wert ein", "Eingabe", $OldString)
+    $newvalue = [Microsoft.VisualBasic.Interaction]::InputBox("Neuer Wert?", "Eingabe", $OldString)
     #$newvalue = Read-Host "$oldline - geben sie den neuen Wert ein für $OldString "
     $newline = "$oldline".Replace("$OldString","$newvalue").Split('#')[0]
     $ScriptContent.Replace("$oldline","$newline") 
@@ -55,13 +69,12 @@ function CreateLinkOnDesktop {
   $shortcut.Save();
 }
 
+# Main
 # Script einlesen
 $ScriptModified=Get-ScriptContent $ScriptWeb
 
-# Alle Zeilen zum Ändern in ein Array
+# Alle Zeilen zum Ändern in ein Array und zeilenweise aendern
 $array = $ScriptModified | Select-String -Pattern ".*#Setup"
-
-# Zeilenweise ändern
 foreach ($line in $array){
   $linesearch="$line".Split('$| |=')[1]+".*#Setup"
   $ScriptModified = Get-NewLineContent $ScriptModified "$linesearch"
