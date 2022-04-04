@@ -1,54 +1,60 @@
+# Parameter
 $savePATH = "c:\tools\scripts"
 $saveFILE = "StartePraxis"
+$ScriptWeb = "https://raw.githubusercontent.com/heinz-otto/Powershell/master/workflow2rdp.ps1"
+
 # https://usefulscripting.network/powershell/file-dialog-with-powershell/
-[System.Reflection.Assembly]::LoadWithPartialName("System.windows.forms") | Out-Null
+#[System.Reflection.Assembly]::LoadWithPartialName("System.windows.forms") | Out-Null
+Add-Type -AssemblyName System.Windows.Forms
+#https://www.mariotti.de/powershell-dialog/
+Add-Type -AssemblyName Microsoft.VisualBasic
 
 function Get-NewLineContent {
-   param (
-          $ScriptContent,$LineToUpdate
-         )
-    $oldline = $ScriptContent |  Select-String -Pattern $LineToUpdate | Select -First 1
+    param ( $ScriptContent,$LineToUpdate )
+
+    $oldline = $ScriptContent | Select-String -Pattern $LineToUpdate | Select -First 1
     $OldString = ("$oldline"| Select-String -Pattern '".*"').Matches.Value -Replace ("`"","")
-    $newvalue = Read-Host "$oldline - neuen Wert bitte - $OldString "
-    # Eventuell hier noch leere Eingabe abfangen
+    $newvalue = [Microsoft.VisualBasic.Interaction]::InputBox("geben sie den neuen Wert ein", "Eingabe", $OldString)
+    #$newvalue = Read-Host "$oldline - geben sie den neuen Wert ein für $OldString "
     $newline = "$oldline".Replace("$OldString","$newvalue").Split('#')[0]
     $ScriptContent.Replace("$oldline","$newline") 
 }
 
-############# Script laden und zwischenspeichern, sonst stimmt irgendwie die Codierung / Formatierung nicht
-$Script='temp.txt'
-$ScriptWeb="https://raw.githubusercontent.com/heinz-otto/Powershell/master/workflow2rdp.ps1"
-$webobjekt=Invoke-WebRequest -Uri $ScriptWeb -OutFile $Script
-$ScriptModified=Get-Content $Script
-Remove-Item $Script
-############
+function Get-ScriptContent {
+   param ( $ScriptWeb )
 
-# Add-Type -AssemblyName System.Windows.Forms
-# # Script einfach laden $Script='C:\tools\scripts\StarteRDPSession.ps1'
-# # Auswahldialog
-# $caption = "Choose Action";
-# $message = "Wie soll das Skript geladen werden?";
-# $aktion0 = new-Object System.Management.Automation.Host.ChoiceDescription "&loadScriptDialog","loadScriptDialog";
-# $aktion1 = new-Object System.Management.Automation.Host.ChoiceDescription "&loadScriptFromWeb","loadScriptFromWeb";
-# $choices = [System.Management.Automation.Host.ChoiceDescription[]]($aktion0,$aktion1);
-# $answer = $host.ui.PromptForChoice($caption,$message,$choices,0)
-# switch ($answer){
-    # 0 {
-    # # loadScriptDialog
-      # $openDlg = New-Object -Typename System.Windows.Forms.OpenFileDialog
-      # $openDlg.ShowDialog()
-      # $Script=$openDlg.FileName
-      # $ScriptModified=Get-Content $Script
-    # }
-    # 1 {
-    # # loadScriptFromWeb
-      # $Script='temp.txt'
-      # $ScriptWeb="https://raw.githubusercontent.com/heinz-otto/Powershell/master/workflow2rdp.ps1"
-      # $webobjekt=Invoke-WebRequest -Uri $ScriptWeb -OutFile $Script
-      # $ScriptModified=Get-Content $Script
-      # Remove-Item $Script
-    # }
-# }
+   $Script = [System.IO.Path]::GetTempFileName()
+   $webobjekt=Invoke-WebRequest -Uri $ScriptWeb -OutFile $Script
+   Get-Content $Script
+   Remove-Item $Script
+}
+
+function SaveScript {
+
+  if (!(Test-Path $savePATH)) {New-Item -Path $savePATH -ItemType Directory}
+  $saveDlg = New-Object -Typename System.Windows.Forms.SaveFileDialog
+  $saveDlg.InitialDirectory = $savePATH
+  $saveDlg.Filter = "Powershell files (*.ps1)|*.ps1"
+  $saveDlg.DefaultExt = 'ps1'
+  $saveDlg.FileName = $saveFILE
+  $saveDlg.ShowDialog()
+  $ScriptModified | Out-File $saveDlg.FileName
+  get-item $saveDlg.FileName
+}
+
+function CreateLinkOnDesktop {
+  param ( $file )
+
+  $WshShell = New-Object -comObject WScript.Shell;
+  $shortcut=$WshShell.CreateShortcut("$Home\Desktop\$($file.BaseName).lnk");
+  $shortcut.TargetPath="PowerShell.exe";
+  $shortcut.Arguments = '-ExecutionPolicy Bypass -File '+ $file.FullName
+  $shortcut.WorkingDirectory = $file.DirectoryName
+  $shortcut.Save();
+}
+
+# Script einlesen
+$ScriptModified=Get-ScriptContent $ScriptWeb
 
 # Alle Zeilen zum Ändern in ein Array
 $array = $ScriptModified | Select-String -Pattern ".*#Setup"
@@ -58,25 +64,10 @@ foreach ($line in $array){
   $linesearch="$line".Split('$| |=')[1]+".*#Setup"
   $ScriptModified = Get-NewLineContent $ScriptModified "$linesearch"
 }
-# Falls es Änderungen gab - speichern
-if ($array.Length -gt 0) {
-    if (!(Test-Path $savePATH)) {New-Item -Path $savePATH -ItemType Directory}
-    $saveDlg = New-Object -Typename System.Windows.Forms.SaveFileDialog
-    $saveDlg.InitialDirectory = $savePATH
-    $saveDlg.Filter = "powershell files (*.ps1)|*.ps1"
-    $saveDlg.DefaultExt = 'ps1'
-    $saveDlg.FileName = $saveFILE
-    $saveDlg.ShowDialog()
-    
-    $ScriptModified | Out-File $saveDlg.FileName
-}
 
-# Erzeuge Icon auf dem Desktop
-#$file = get-item 'C:\Users\heinz\OneDrive\Dokumente\workfow2rdp.ps1'
-$file = get-item $saveDlg.FileName
-$WshShell = New-Object -comObject WScript.Shell;
-$shortcut=$WshShell.CreateShortcut("$Home\Desktop\$($file.BaseName).lnk");
-$shortcut.TargetPath="PowerShell.exe";
-$shortcut.Arguments = '-ExecutionPolicy Bypass -File '+ $file.FullName
-$shortcut.WorkingDirectory = $file.DirectoryName
-$shortcut.Save();
+# Falls es Zeilen zum Änderungen gab - speichern und Desktop Link erzeugen
+if ($array.Length -gt 0) {
+   $file = $(SaveScript)
+   # Erzeuge Icon auf dem Desktop
+   CreateLinkOnDesktop $file
+}
