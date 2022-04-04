@@ -4,6 +4,9 @@
 $fhemurl = "http://192.168.x.x:8083" #Setup
 $server = "ServerNameWOLDevice" #Setup
 $station = "StationsNameWOLDevice" #Setup
+
+Add-Type -AssemblyName System.Windows.Forms
+
 # Das Script prueft eine bestimmtes Netzwerkverbindungsprofil
 if ((Get-NetConnectionProfile).InterfaceAlias|? {$_ -match 'peer'}){
     "Wireguard ist verbunden"
@@ -49,4 +52,7 @@ if ((Get-NetConnectionProfile).InterfaceAlias|? {$_ -match 'peer'}){
     ############################
 
     # "set $station off;sleep ${station}:isRunning:.false wait${station}; sleep 2; IF ([st_Rechner] eq 'off' and [Sicherung] eq 'beendet') (set $server off)"|.\fhemcl.ps1 $fhemurl
-} else {Read-Host -Prompt "Zuerst mit Wireguard verbinden - ENTER druecken..."}
+} else {
+   # Read-Host -Prompt "Zuerst mit Wireguard verbinden - ENTER druecken..."
+   $result = [System.Windows.Forms.MessageBox]::Show("erst Wiregurad verbinden", "Netzwerkverbindung", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error)
+}
