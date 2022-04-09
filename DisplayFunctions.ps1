@@ -1,4 +1,9 @@
 function Set-DisplayScaling {
+    # 0 ist immer der empfohlene Wert, von da aus plus minus in 1 Schritten
+    # int: –2147483648 to 2147483647 uint: 0 to 4294967295
+    # -1 = 4294967295
+    # -2 = 4294967294
+    # -3 = 4294967293
     # $scaling = 0 : 100% (default)
     # $scaling = 1 : 125% 
     # $scaling = 2 : 150% 
