@@ -16,7 +16,7 @@ $fhemurl = "http://192.168.x.x:8083" #Setup
 $server = "ServerNameWOLDevice" #Setup
 $station = "StationsNameWOLDevice" #Setup
 $width = "1920" #Setup
-$high = "1080" #Setup
+$height = "1080" #Setup
 
 
 $ConnectionProfilePattern = 'peer'
@@ -65,7 +65,7 @@ if ((Get-NetConnectionProfile).InterfaceAlias|? {$_ -match $ConnectionProfilePat
  
     sleep 2
     $ipaddr=(("list $station IP"|.\fhemcl.ps1 $fhemurl).split()| where {$_})[1]    # lies die IP Adresse aus dem WOL Device
-    Start-Process "$env:windir\system32\mstsc.exe" -ArgumentList "/v:${ipaddr} /h:${high} /w:${width}" -Wait 
+    Start-Process "$env:windir\system32\mstsc.exe" -ArgumentList "/v:${ipaddr} /h:${height} /w:${width}" -Wait 
     
     # "set $station off;sleep ${station}:isRunning:.false wait${station}; sleep 2; IF ([st_Rechner] eq 'off' and [Sicherung] eq 'beendet') (set $server off)"|.\fhemcl.ps1 $fhemurl
 } else {
