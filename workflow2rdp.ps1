@@ -15,8 +15,9 @@
 $fhemurl = "http://192.168.x.x:8083" #Setup
 $server = "ServerNameWOLDevice" #Setup
 $station = "StationsNameWOLDevice" #Setup
-$high = "1080" #Setup
 $width = "1920" #Setup
+$high = "1080" #Setup
+
 
 $ConnectionProfilePattern = 'peer'
 
