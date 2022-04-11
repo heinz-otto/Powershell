@@ -15,8 +15,8 @@
 $fhemurl = "http://192.168.x.x:8083" #Setup
 $server = "ServerNameWOLDevice" #Setup
 $station = "StationsNameWOLDevice" #Setup
-$width = "1920" #Setup
-$height = "1080" #Setup
+# $width = "1920" #Setup
+# $height = "1080" #Setup
 
 
 $ConnectionProfilePattern = 'peer'
@@ -27,8 +27,10 @@ Add-Type -AssemblyName System.Windows.Forms
 # Das Script prueft auf ein bestehendes Netzwerkverbindungsprofil
 if ((Get-NetConnectionProfile).InterfaceAlias|? {$_ -match $ConnectionProfilePattern}){
     Write-Output "Netzwerk ist verbunden"
-    # falls nicht verfuegbar fhemcl Script nachladen
+    # falls nicht verfuegbar fhemcl und DisplayFunctions Script nachladen
     if (-not(Test-Path .\fhemcl.ps1)) {wget -OutFile .\fhemcl.ps1 https://raw.githubusercontent.com/heinz-otto/fhemcl/master/fhemcl.ps1}
+    if (-not(Test-Path .\DisplayFunctions.ps1)) {wget -OutFile .\DisplayFunctions.ps1 https://raw.githubusercontent.com/heinz-otto/Powershell/master/DisplayFunctions.ps1}
+    . .\DisplayFunctions.ps1
     $check=(("list ${server} isRunning"|.\fhemcl.ps1 $fhemurl).split()| where {$_})[3]
     if ($check -eq 'false'){
        Write-Output "Server $server wird gestartet. Sobald dieser verfuegbar ist wird die Station $station gestartet"
@@ -65,7 +67,12 @@ if ((Get-NetConnectionProfile).InterfaceAlias|? {$_ -match $ConnectionProfilePat
  
     sleep 2
     $ipaddr=(("list $station IP"|.\fhemcl.ps1 $fhemurl).split()| where {$_})[1]    # lies die IP Adresse aus dem WOL Device
-    Start-Process "$env:windir\system32\mstsc.exe" -ArgumentList "/v:${ipaddr} /h:${height} /w:${width}" -Wait 
+    # extra Window
+    # Start-Process "$env:windir\system32\mstsc.exe" -ArgumentList "/v:${ipaddr} /h:${height} /w:${width}" -Wait
+    # Fullscreen an change scaling
+    Set-DisplayScaling -1
+    Start-Process "$env:windir\system32\mstsc.exe" -ArgumentList "/v:${ipaddr}" -Wait
+    Set-DisplayScaling 0
     
     # "set $station off;sleep ${station}:isRunning:.false wait${station}; sleep 2; IF ([st_Rechner] eq 'off' and [Sicherung] eq 'beendet') (set $server off)"|.\fhemcl.ps1 $fhemurl
 } else {
