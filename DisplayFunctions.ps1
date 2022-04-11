@@ -1,3 +1,17 @@
+ <#
+.SYNOPSIS
+	The script provide functions to set Display Scaling
+.DESCRIPTION	
+    The script provide functions to set Display Scaling
+.EXAMPLE
+    # switch to alternate Resolution for Fullscreen RemoteDesktop Session
+    $ipaddr='192.168.x.x'
+    Set-DisplayScaling -1
+    Start-Process "$env:windir\system32\mstsc.exe" -ArgumentList "/v:${ipaddr}" -Wait
+    Set-DisplayScaling 0
+.LINK
+    https://github.com/heinz-otto/Powershell/
+#>
 function Set-DisplayScaling {
     # 0 ist immer der empfohlene Wert, von da aus plus minus in 1 Schritten 
     # Achtung! uint: 0 to 4294967295 , wenn $scaling negativ -> [uint32]::MaxValue + 1 + $scaling
@@ -30,7 +44,4 @@ function Get-DisplayResolution {
     Add-Type -AssemblyName System.Windows.Forms
     [System.Windows.Forms.SystemInformation]::VirtualScreen
 }
-$ipaddr='lpkw11'
-Set-DisplayScaling 1
-Start-Process "$env:windir\system32\mstsc.exe" -ArgumentList "/v:${ipaddr}" -Wait
-Set-DisplayScaling 0
+
