@@ -1,6 +1,6 @@
  <#
 .SYNOPSIS
-	The script provide functions to set Display Scaling
+    The script provide functions to set Display Scaling
 .DESCRIPTION	
     The script provide functions to set Display Scaling
 .EXAMPLE
