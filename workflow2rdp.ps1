@@ -12,11 +12,11 @@
 #>
 
 # diese 3 Variablen muessen angepasst werden
-$fhemurl = "http://192.168.x.x:8083" #Setup
-$server = "ServerNameWOLDevice" #Setup
-$station = "StationsNameWOLDevice" #Setup
-# $width = "1920" #Setup
-# $height = "1080" #Setup
+$fhemurl = "http://192.168.x.x:8083" #Setup UrlFHEMServer
+$server = "ServerNameWOLDevice" #Setup ServerName
+$station = "StationsNameWOLDevice" #Setup StationsName
+# $width = "1920" #Setup PixelBreite
+# $height = "1080" #Setup PixelHoehe
 
 
 $ConnectionProfilePattern = 'peer'
