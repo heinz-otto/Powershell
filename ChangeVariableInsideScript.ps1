@@ -1,7 +1,7 @@
 <#
 .SYNOPSIS
-	The script is a kind of setup for a script downloaded from Web
-.DESCRIPTION	
+    The script is a kind of setup for a script downloaded from Web
+.DESCRIPTION
     Im heruntergeladenem Script werden Zeilen mit #Setup gesucht und die Werte der Variablen werden neu gesetzt. 
     Das Script wird lokal gespeichert und ein Link auf dem Desktop erzeugt.
 .EXAMPLE
@@ -30,8 +30,9 @@ function Get-NewLineContent {
     param ( $ScriptContent,$LineToUpdate )
 
     $oldline = $ScriptContent | Select-String -Pattern $LineToUpdate | Select -First 1
+    $InputBoxHeader = "Neuer Wert für " + ("$oldline".Split('#')[1]).Split(' ')[1] + " ?"
     $OldString = ("$oldline"| Select-String -Pattern '".*"').Matches.Value -Replace ("`"","")
-    $newvalue = [Microsoft.VisualBasic.Interaction]::InputBox("Neuer Wert?", "Konfiguriere Skript $saveFILE", $OldString)
+    $newvalue = [Microsoft.VisualBasic.Interaction]::InputBox("$InputBoxHeader", "Konfiguriere Skript $saveFILE", $OldString)
     #$newvalue = Read-Host "$oldline - geben sie den neuen Wert ein für $OldString "
     $newline = "$oldline".Replace("$OldString","$newvalue").Split('#')[0]
     $ScriptContent.Replace("$oldline","$newline") 
