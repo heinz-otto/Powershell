@@ -30,7 +30,7 @@ function Get-NewLineContent {
     param ( $ScriptContent,$LineToUpdate )
 
     $oldline = $ScriptContent | Select-String -Pattern $LineToUpdate | Select -First 1
-    $InputBoxHeader = "Neuer Wert für " + ("$oldline".Split('#')[1]).Split(' ')[1] + " ?"
+    $InputBoxHeader = "Neuer Wert fuer " + ("$oldline".Split('#')[1]).Split(' ')[1] + " ?"
     $OldString = ("$oldline"| Select-String -Pattern '".*"').Matches.Value -Replace ("`"","")
     $newvalue = [Microsoft.VisualBasic.Interaction]::InputBox("$InputBoxHeader", "Konfiguriere Skript $saveFILE", $OldString)
     #$newvalue = Read-Host "$oldline - geben sie den neuen Wert ein für $OldString "
