@@ -75,7 +75,7 @@ function CreateLinkOnDesktop {
 $ScriptModified=Get-ScriptContent $ScriptWeb
 
 # Alle Zeilen zum Ändern in ein Array und zeilenweise aendern
-$array = $ScriptModified | Select-String -Pattern ".*#Setup"
+$array = $ScriptModified | Select-String -Pattern ".*#Setup"|Select-String -Pattern "^\s*#" -NotMatch
 foreach ($line in $array){
   $linesearch="$line".Split('$| |=')[1]+".*#Setup"
   $ScriptModified = Get-NewLineContent $ScriptModified "$linesearch"
