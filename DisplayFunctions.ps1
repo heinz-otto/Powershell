@@ -26,7 +26,10 @@ function Set-DisplayScaling {
     # $scaling = 1 : 125% 
     # $scaling = 2 : 150% 
     # $scaling = 3 : 175% 
-    param([uint32]$scaling = 0)
+    param([int]$scaling = 0)
+    # umrechnung in uint32
+    if ($scaling -lt 0) {[uint32]$scale = [uint32]::MaxValue + 1 + $scaling} else {[uint32]$scale = $scaling}
+
 $source = @'
 [DllImport("user32.dll", EntryPoint = "SystemParametersInfo")]
 public static extern bool SystemParametersInfo(
@@ -36,12 +39,9 @@ public static extern bool SystemParametersInfo(
                   uint fWinIni);
 '@
     $apicall = Add-Type -MemberDefinition $source -Name WinAPICall -Namespace SystemParamInfo -PassThru
-    # umrechnung in uint32
-    if ($scaling -lt 0) {[uint32]$scaling = [uint32]::MaxValue + 1 + $scaling}
-    $apicall::SystemParametersInfo(0x009F, $scaling, $null, 1) | Out-Null
+    $apicall::SystemParametersInfo(0x009F, $scale, $null, 1) | Out-Null
 }
 function Get-DisplayResolution {
     Add-Type -AssemblyName System.Windows.Forms
     [System.Windows.Forms.SystemInformation]::VirtualScreen
 }
-
