@@ -35,7 +35,7 @@ public static extern bool SystemParametersInfo(
                   uint pvParam,
                   uint fWinIni);
 '@
-    $apicall = Add-Type -MemberDefinition $source -Name WinAPICall -Namespace SystemParamInfo –PassThru
+    $apicall = Add-Type -MemberDefinition $source -Name WinAPICall -Namespace SystemParamInfo -PassThru
     # umrechnung in uint32
     if ($scaling -lt 0) {[uint32]$scaling = [uint32]::MaxValue + 1 + $scaling}
     $apicall::SystemParametersInfo(0x009F, $scaling, $null, 1) | Out-Null
