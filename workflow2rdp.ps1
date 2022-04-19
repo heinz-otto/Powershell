@@ -71,7 +71,7 @@ if ((Get-NetConnectionProfile).InterfaceAlias|? {$_ -match $ConnectionProfilePat
     # Start-Process "$env:windir\system32\mstsc.exe" -ArgumentList "/v:${ipaddr} /h:${height} /w:${width}" -Wait
     # Fullscreen an change scaling
     Set-DisplayScaling -1
-    Start-Process "$env:windir\system32\mstsc.exe" -ArgumentList "/v:${ipaddr} -f" -Wait
+    Start-Process "$env:windir\system32\mstsc.exe" -ArgumentList "/v:${ipaddr} /f" -Wait
     Set-DisplayScaling 0
     
     # "set $station off;sleep ${station}:isRunning:.false wait${station}; sleep 2; IF ([st_Rechner] eq 'off' and [Sicherung] eq 'beendet') (set $server off)"|.\fhemcl.ps1 $fhemurl
