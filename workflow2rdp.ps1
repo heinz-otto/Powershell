@@ -18,6 +18,7 @@ $station = "StationsNameWOLDevice" #Setup StationsName
 # $width = "1920" #Setup PixelBreite
 # $height = "1080" #Setup PixelHoehe
 
+$regex = [regex]"\d{1,3}(\.\d{1,3}){3}"
 
 $ConnectionProfilePattern = 'peer'
 
@@ -25,7 +26,8 @@ $ConnectionProfilePattern = 'peer'
 Add-Type -AssemblyName System.Windows.Forms
 
 # Das Script prueft auf ein bestehendes Netzwerkverbindungsprofil
-if ((Get-NetConnectionProfile).InterfaceAlias|? {$_ -match $ConnectionProfilePattern}){
+# if (Test-Connection ($regex.Matches($fhemurl)).value -count 2 -Quiet) {
+if ((Get-NetConnectionProfile).InterfaceAlias|? {$_ -match $ConnectionProfilePattern}) {
     Write-Output "Netzwerk ist verbunden"
     # falls nicht verfuegbar fhemcl und DisplayFunctions Script nachladen
     if (-not(Test-Path .\fhemcl.ps1)) {wget -OutFile .\fhemcl.ps1 https://raw.githubusercontent.com/heinz-otto/fhemcl/master/fhemcl.ps1}
