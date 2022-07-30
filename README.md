@@ -12,7 +12,7 @@ Call local script with extra Parameter
 ```
 C:\WINDOWS\System32\WindowsPowerShell\v1.0\PowerShell.exe -ExecutionPolicy Bypass -File C:\tools\scripts\StartePraxis.ps1
 ```
-Download all Script in this Repository
+## Download all Scripts in this Repository
 ```
 Invoke-WebRequest 'https://github.com/heinz-otto/Powershell/archive/refs/heads/master.zip' -OutFile .\Powershell.zip
 Expand-Archive .\Powershell.zip .\
