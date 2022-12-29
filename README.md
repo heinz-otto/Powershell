@@ -19,3 +19,7 @@ Expand-Archive .\Powershell.zip .\
 Rename-Item .\Powershell-master .\Powershell
 Remove-Item .\Powershell.zip
 ```
+##Download a single Script
+```
+wget -Outfile ssh-copy-id.ps1 https://raw.githubusercontent.com/heinz-otto/Powershell/master/ssh-copy-id.ps1
+```
