@@ -1,5 +1,7 @@
 # --- Hyper-V-Dienste vollständig entfernen ---
 Write-Host "`n=== Hyper-V-Dienste-Entferner ===`n"
+# Das Script ist kaputt, es zerstört das System!
+exit
 
 # Typische Hyper-V Dienstnamen
 $hvNames = @(
