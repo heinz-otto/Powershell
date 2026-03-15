@@ -3,12 +3,12 @@ Write-Host "`n=== Intel-Dienste-Entferner ===`n"
 
 # 1. Alle Intel-Dienste finden (normale Dienste)
 $intelServices = Get-Service | Where-Object {
-    $_.Name -like "*intel*" -or $_.DisplayName -like "*Intel*"
+    $_.Name -like "*intel*" -or $_.DisplayName -like "Intel*"
 }
 
 # 2. Alle Intel-Treiber-Dienste finden
 $intelDrivers = Get-WmiObject Win32_SystemDriver | Where-Object {
-    $_.Name -like "*intel*" -or $_.DisplayName -like "*Intel*"
+    $_.Name -like "*intel*" -or $_.DisplayName -like "Intel*"
 }
 
 if ($intelServices.Count -eq 0 -and $intelDrivers.Count -eq 0) {
